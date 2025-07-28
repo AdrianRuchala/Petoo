@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "212834337480",
+    "firebase_url": "https://petoo-e2ab1-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "petoo-e2ab1",
+    "storage_bucket": "petoo-e2ab1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212834337480:android:c1aef632ee646b7948dbfd",
+        "android_client_info": {
+          "package_name": "com.droidcode.apps.petoo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212834337480-tlot7e67lvskcne2t3hh3n7bboln82rb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.droidcode.apps.petoo",
+            "certificate_hash": "b0dc146e489069ee27d3cedd34d51535e5aba7fa"
+          }
+        },
+        {
+          "client_id": "212834337480-u707cht3rng3405j6hqpq7c62u90rhkv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTTYeP3ebkAS4cCPJ10JXdZ3WGM7V_PGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212834337480-u707cht3rng3405j6hqpq7c62u90rhkv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
