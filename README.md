@@ -11,3 +11,11 @@ to store key information about their pet, and the ability to save appointments.
 - Firebase Authentication
 - Glide (Landscapist)
 - Sheets-Compose-Dialogs
+
+
+## Screenshots:
+![Image](https://github.com/user-attachments/assets/acb41311-605a-4080-84a0-9de762601c70)
+
+![Image](https://github.com/user-attachments/assets/6429bbe2-df24-4d7a-83de-af364f7d8378)
+
+![Image](https://github.com/user-attachments/assets/dfc8ecfb-ab46-46e1-bfe6-28d266243bee)
