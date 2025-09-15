@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo
+package presentation.visitDetails
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -33,10 +33,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.droidcode.apps.petoo.vetViews.ExitAlertDialog
+import com.droidcode.apps.petoo.R
+import presentation.addNotes.ExitAlertDialog
 import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.placeholder.placeholder.PlaceholderPlugin
+import presentation.viewmodels.MainScreenViewModel
 
 @Composable
 fun VisitDetailsScreen(

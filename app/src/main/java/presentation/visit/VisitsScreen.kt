@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo
+package presentation.visit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,7 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.droidcode.apps.petoo.R
 import com.droidcode.apps.petoo.ui.theme.VisitData
+import presentation.viewmodels.MainScreenViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

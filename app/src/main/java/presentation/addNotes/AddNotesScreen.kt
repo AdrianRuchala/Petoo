@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo.vetViews
+package presentation.addNotes
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.droidcode.apps.petoo.MainScreenViewModel
+import presentation.viewmodels.MainScreenViewModel
 import com.droidcode.apps.petoo.R
 
 @Composable

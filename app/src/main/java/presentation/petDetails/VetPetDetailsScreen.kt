@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo.vetViews
+package presentation.petDetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -33,9 +33,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.droidcode.apps.petoo.MainScreenViewModel
+import presentation.viewmodels.MainScreenViewModel
 import com.droidcode.apps.petoo.R
-import com.droidcode.apps.petoo.VaccinationsData
+import com.droidcode.apps.petoo.domain.models.VaccinationsData
+import com.droidcode.apps.petoo.domain.models.VetPetsViewState
 import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.placeholder.placeholder.PlaceholderPlugin

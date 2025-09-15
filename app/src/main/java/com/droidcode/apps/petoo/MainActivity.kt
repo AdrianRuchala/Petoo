@@ -31,6 +31,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import android.provider.Settings
 import com.droidcode.apps.petoo.auth.selectedRole
+import presentation.viewmodels.MainScreenViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

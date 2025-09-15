@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo.userViews
+package presentation.addPet
 
 import android.net.Uri
 import android.text.TextUtils.isEmpty
@@ -39,7 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.droidcode.apps.petoo.MainScreenViewModel
+import presentation.viewmodels.MainScreenViewModel
 import com.droidcode.apps.petoo.R
 import com.droidcode.apps.petoo.auth.presentation.UserData
 import com.google.firebase.auth.ktx.auth

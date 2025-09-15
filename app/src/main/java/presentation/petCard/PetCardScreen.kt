@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo.userViews
+package presentation.petCard
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -48,13 +48,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import com.droidcode.apps.petoo.MainScreenViewModel
-import com.droidcode.apps.petoo.MainScreenViewStateData
+import presentation.viewmodels.MainScreenViewModel
+import com.droidcode.apps.petoo.domain.models.MainScreenViewStateData
 import com.droidcode.apps.petoo.R
-import com.droidcode.apps.petoo.SortType
+import com.droidcode.apps.petoo.domain.models.SortType
 import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.placeholder.placeholder.PlaceholderPlugin
+import presentation.petDetails.PetDetailsScreen
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable

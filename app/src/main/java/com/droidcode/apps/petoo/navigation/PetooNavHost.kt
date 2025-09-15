@@ -13,17 +13,17 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.droidcode.apps.petoo.MainScreenViewModel
-import com.droidcode.apps.petoo.VisitDetailsScreen
-import com.droidcode.apps.petoo.VisitsScreen
+import presentation.viewmodels.MainScreenViewModel
+import presentation.visitDetails.VisitDetailsScreen
+import presentation.visit.VisitsScreen
 import com.droidcode.apps.petoo.settings.Profile
 import com.droidcode.apps.petoo.settings.ProfileScreen
 import com.droidcode.apps.petoo.settings.SettingsInfo
-import com.droidcode.apps.petoo.userViews.AddPetScreen
-import com.droidcode.apps.petoo.userViews.AddVisitScreen
-import com.droidcode.apps.petoo.userViews.PetCardScreen
-import com.droidcode.apps.petoo.vetViews.VetAddVisitScreen
-import com.droidcode.apps.petoo.vetViews.VetPetCardScreen
+import presentation.addPet.AddPetScreen
+import presentation.addVisit.AddVisitScreen
+import presentation.petCard.PetCardScreen
+import presentation.addVisit.VetAddVisitScreen
+import presentation.petCard.VetPetCardScreen
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 

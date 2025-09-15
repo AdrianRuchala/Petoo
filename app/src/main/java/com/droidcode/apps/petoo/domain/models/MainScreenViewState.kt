@@ -1,6 +1,6 @@
-package com.droidcode.apps.petoo.vetViews
+package com.droidcode.apps.petoo.domain.models
 
-data class VetPetsViewState(
+data class MainScreenViewStateData(
     var petId: String,
     var petName: String,
     var petDateOfBirth: String,
@@ -8,5 +8,4 @@ data class VetPetsViewState(
     var petGender: String,
     var petSpecies: String,
     var petBreed: String,
-    var petOwner: String
 )

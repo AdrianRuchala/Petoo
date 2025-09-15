@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo.vetViews
+package presentation.addVisit
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -50,19 +50,20 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import java.util.Calendar
 import android.provider.Settings
-import com.droidcode.apps.petoo.MainScreenViewModel
-import com.droidcode.apps.petoo.notification.Notification
-import com.droidcode.apps.petoo.userViews.PetGenderAlertDialog
+import presentation.viewmodels.MainScreenViewModel
 import com.droidcode.apps.petoo.R
-import com.droidcode.apps.petoo.VaccinationsData
+import com.droidcode.apps.petoo.domain.models.VaccinationsData
+import com.droidcode.apps.petoo.notification.Notification
 import com.droidcode.apps.petoo.notification.notificationId
 import com.google.firebase.auth.ktx.auth
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 private lateinit var database: DatabaseReference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VetAddVisitScreen(
+fun AddVisitScreen(
     modifier: Modifier,
     viewModel: MainScreenViewModel,
     onNavigateUp: () -> Unit
@@ -76,19 +77,18 @@ fun VetAddVisitScreen(
     var petVaccinations by remember { mutableStateOf<List<VaccinationsData>>(emptyList()) }
     var petId by remember { mutableStateOf("") }
     var vetAddress by remember { mutableStateOf("") }
-    var ownerName by remember { mutableStateOf("") }
+    var vetName by remember { mutableStateOf("") }
     var visitDate by remember { mutableStateOf("") }
     val openSelectPetDialog = remember { mutableStateOf(false) }
-    val openSelectOwnerDialog = remember { mutableStateOf(false) }
+    val openSelectVetDialog = remember { mutableStateOf(false) }
     val openClockDialog = remember { mutableStateOf(false) }
-    val openSelectPetGenderDialog = remember { mutableStateOf(false) }
-    val openPetDayOfBirthDialog = remember { mutableStateOf(false) }
     var visitTime by remember { mutableStateOf("") }
     var visitDateTime by remember { mutableStateOf("") }
-    var ownerId by remember { mutableStateOf("") }
+    var vetId by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val ownerName = Firebase.auth.currentUser?.displayName.toString()
 
-    viewModel.vetAddVaccinationList(ownerId, petId)
+    viewModel.readVaccinationList(petId)
     petVaccinations = viewModel.vaccinationViewState.value
 
     val calendarState = rememberUseCaseState()
@@ -104,7 +104,6 @@ fun VetAddVisitScreen(
         })
 
     if (openSelectPetDialog.value) {
-        viewModel.readPets(ownerId)
         SelectPet(
             modifier,
             openSelectPetDialog,
@@ -116,11 +115,11 @@ fun VetAddVisitScreen(
         }
     }
 
-    if (openSelectOwnerDialog.value) {
-        viewModel.readOwners()
-        SelectOwner(modifier, openSelectOwnerDialog, viewModel) { selectedOwner, selectedOwnerId ->
-            ownerName = selectedOwner
-            ownerId = selectedOwnerId
+    if (openSelectVetDialog.value) {
+        viewModel.readVets()
+        SelectVet(modifier, openSelectVetDialog, viewModel) { selectedVet, selectedVetId ->
+            vetName = selectedVet
+            vetId = selectedVetId
         }
     }
 
@@ -128,18 +127,6 @@ fun VetAddVisitScreen(
         ClockDialog(modifier, openClockDialog) { pickedTime ->
             visitTime = pickedTime
             visitDateTime = "$visitDate, $visitTime"
-        }
-    }
-
-    if (openPetDayOfBirthDialog.value) {
-        SelectPetDateOfBirth(openPetDayOfBirthDialog) { selectedPetDateOfBirth ->
-            petDateOfBirth = selectedPetDateOfBirth
-        }
-    }
-
-    if (openSelectPetGenderDialog.value) {
-        PetGenderAlertDialog(modifier, openSelectPetGenderDialog) { selectedGender ->
-            petGender = selectedGender
         }
     }
 
@@ -171,24 +158,6 @@ fun VetAddVisitScreen(
 
         Column(modifier.padding(all = 8.dp)) {
             TextField(
-                value = ownerName,
-                onValueChange = { ownerName = it },
-                modifier
-                    .fillMaxWidth()
-                    .clickable { openSelectOwnerDialog.value = true },
-                label = { Text(stringResource(id = R.string.select_owner)) },
-                isError = isEmpty(ownerName),
-                enabled = false,
-                colors = TextFieldDefaults.colors(
-                    disabledLabelColor = if (ownerName.isEmpty()) TextFieldDefaults.colors().errorLabelColor else TextFieldDefaults.colors().unfocusedLabelColor,
-                    disabledTextColor = if (ownerName.isEmpty()) TextFieldDefaults.colors().errorTextColor else TextFieldDefaults.colors().unfocusedTextColor,
-                    disabledIndicatorColor = if (ownerName.isEmpty()) TextFieldDefaults.colors().errorIndicatorColor else TextFieldDefaults.colors().unfocusedIndicatorColor,
-                )
-            )
-            Spacer(modifier.padding(all = 8.dp))
-
-
-            TextField(
                 value = petName,
                 onValueChange = { petName = it },
                 modifier
@@ -205,59 +174,22 @@ fun VetAddVisitScreen(
             )
             Spacer(modifier.padding(all = 8.dp))
 
-            if (ownerName.isNotEmpty() && petName.isNotEmpty() && petId.isEmpty()) {
-                TextField(
-                    value = petDateOfBirth,
-                    onValueChange = { petDateOfBirth = it },
-                    modifier
-                        .fillMaxWidth()
-                        .clickable { openPetDayOfBirthDialog.value = true },
-                    label = { Text(stringResource(id = R.string.date_of_birth)) },
-                    isError = isEmpty(petDateOfBirth),
-                    enabled = false,
-                    colors = TextFieldDefaults.colors(
-                        disabledLabelColor = if (petDateOfBirth.isEmpty()) TextFieldDefaults.colors().errorLabelColor else TextFieldDefaults.colors().unfocusedLabelColor,
-                        disabledTextColor = if (petDateOfBirth.isEmpty()) TextFieldDefaults.colors().errorTextColor else TextFieldDefaults.colors().unfocusedTextColor,
-                        disabledIndicatorColor = if (petDateOfBirth.isEmpty()) TextFieldDefaults.colors().errorIndicatorColor else TextFieldDefaults.colors().unfocusedIndicatorColor,
-                    )
+            TextField(
+                value = vetName,
+                onValueChange = { vetName = it },
+                modifier
+                    .fillMaxWidth()
+                    .clickable { openSelectVetDialog.value = true },
+                label = { Text(stringResource(id = R.string.select_vet)) },
+                isError = isEmpty(vetName),
+                enabled = false,
+                colors = TextFieldDefaults.colors(
+                    disabledLabelColor = if (vetName.isEmpty()) TextFieldDefaults.colors().errorLabelColor else TextFieldDefaults.colors().unfocusedLabelColor,
+                    disabledTextColor = if (vetName.isEmpty()) TextFieldDefaults.colors().errorTextColor else TextFieldDefaults.colors().unfocusedTextColor,
+                    disabledIndicatorColor = if (vetName.isEmpty()) TextFieldDefaults.colors().errorIndicatorColor else TextFieldDefaults.colors().unfocusedIndicatorColor,
                 )
-                Spacer(modifier.padding(all = 8.dp))
-
-                TextField(
-                    value = petGender,
-                    onValueChange = { petGender = it },
-                    modifier
-                        .fillMaxWidth()
-                        .clickable { openSelectPetGenderDialog.value = true },
-                    label = { Text(stringResource(id = R.string.gender)) },
-                    isError = isEmpty(petGender),
-                    enabled = false,
-                    colors = TextFieldDefaults.colors(
-                        disabledLabelColor = if (petGender.isEmpty()) TextFieldDefaults.colors().errorLabelColor else TextFieldDefaults.colors().unfocusedLabelColor,
-                        disabledTextColor = if (petGender.isEmpty()) TextFieldDefaults.colors().errorTextColor else TextFieldDefaults.colors().unfocusedTextColor,
-                        disabledIndicatorColor = if (petGender.isEmpty()) TextFieldDefaults.colors().errorIndicatorColor else TextFieldDefaults.colors().unfocusedIndicatorColor,
-                    )
-                )
-                Spacer(modifier.padding(all = 8.dp))
-
-                TextField(
-                    value = petSpecies,
-                    onValueChange = { petSpecies = it },
-                    modifier.fillMaxWidth(),
-                    label = { Text(stringResource(id = R.string.pet_species)) },
-                    isError = isEmpty(petSpecies)
-                )
-                Spacer(modifier.padding(all = 8.dp))
-
-                TextField(
-                    value = petBreed,
-                    onValueChange = { petBreed = it },
-                    modifier.fillMaxWidth(),
-                    label = { Text(stringResource(id = R.string.breed)) },
-                    isError = isEmpty(petBreed)
-                )
-                Spacer(modifier.padding(all = 8.dp))
-            }
+            )
+            Spacer(modifier.padding(all = 8.dp))
 
             TextField(
                 value = vetAddress,
@@ -288,61 +220,51 @@ fun VetAddVisitScreen(
 
         Button(
             onClick = {
-                val petData =
-                    viewModel.mainScreenViewState.value.find { it.petId == petId }
-                petData?.let {
-                    petName = petData.petName
-                    petDateOfBirth = petData.petDateOfBirth
-                    petImage = petData.petImage
-                    petGender = petData.petGender
-                    petSpecies = petData.petSpecies
-                    petBreed = petData.petBreed
-                }
-
-                if (!isEmpty(petName) && !isEmpty(petGender) && !isEmpty(petSpecies) && !isEmpty(petBreed) && !isEmpty(vetAddress) && !isEmpty(visitDateTime)) {
+                if (!isEmpty(petName) && !isEmpty(vetAddress) && !isEmpty(visitDateTime)) {
                     database = Firebase.database.reference
                     val visitId = database.push().key!!
-                    val userId = Firebase.auth.currentUser?.uid.toString()
-
-                    viewModel.checkIfVisitExists(
-                        petId,
-                        userId,
-                        visitDate,
-                        visitTime
-                    ) { isExisting ->
+                    viewModel.checkIfVisitExists(petId, vetId, visitDate, visitTime) { isExisting ->
                         if (isExisting) {
                             onNavigateUp()
                         } else {
-                            viewModel.vetAddVisit(
+                            viewModel.addVisit(
                                 visitId,
                                 petId,
                                 petName,
                                 petImage,
-                                ownerId,
-                                ownerName,
+                                vetId,
+                                vetName,
                                 vetAddress,
                                 visitDate,
                                 visitTime
                             )
 
-                            if (petId.isEmpty()) {
-                                petId = database.push().key!!
+                            val petData =
+                                viewModel.mainScreenViewState.value.find { it.petId == petId }
+                            petData?.let {
+                                petName = petData.petName
+                                petDateOfBirth = petData.petDateOfBirth
+                                petImage = petData.petImage
+                                petGender = petData.petGender
+                                petSpecies = petData.petSpecies
+                                petBreed = petData.petBreed
                             }
 
-                            viewModel.addPetForVet(
-                                userId,
-                                petId,
-                                petName,
-                                petDateOfBirth,
-                                petBreed,
-                                petImage,
-                                petGender,
-                                petSpecies,
-                                petVaccinations,
-                                visitDate,
-                                ownerName
-                            )
-
+                            if (vetId.isNotEmpty()) {
+                                viewModel.addPetForVet(
+                                    vetId,
+                                    petId,
+                                    petName,
+                                    petDateOfBirth,
+                                    petBreed,
+                                    petImage,
+                                    petGender,
+                                    petSpecies,
+                                    petVaccinations,
+                                    visitDate,
+                                    ownerName
+                                )
+                            }
                         }
                         checkAlarmPermission(context, visitDate, visitTime)
                         onNavigateUp()
@@ -358,7 +280,7 @@ fun VetAddVisitScreen(
 }
 
 @Composable
-fun SelectPet(
+private fun SelectPet(
     modifier: Modifier,
     showDialog: MutableState<Boolean>,
     viewModel: MainScreenViewModel,
@@ -387,29 +309,9 @@ fun SelectPet(
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
-                    TextField(
-                        value = petName,
-                        onValueChange = { petName = it },
-                        modifier
-                            .fillMaxWidth(),
-                        label = { Text(stringResource(R.string.enter_petName)) },
-                        placeholder = { Text(stringResource(R.string.enter_petName)) }
-                    )
                 }
             },
             confirmButton = {
-                Button(
-                    onClick = {
-                        if (petName.isNotEmpty()) {
-                            onDismiss(petName, "", "")
-                            showDialog.value = false
-                        }
-                    }
-                ) {
-                    Text(stringResource(R.string.dialog_positive))
-                }
-            },
-            dismissButton = {
                 Button(
                     onClick = {
                         showDialog.value = false
@@ -423,59 +325,59 @@ fun SelectPet(
 }
 
 @Composable
-fun SelectOwner(
+fun SelectVet(
     modifier: Modifier,
     showDialog: MutableState<Boolean>,
     viewModel: MainScreenViewModel,
     onDismiss: (String, String) -> Unit
 ) {
-    var ownerName by remember { mutableStateOf("") }
-    var ownerId by remember { mutableStateOf("") }
-    val vets = viewModel.ownersViewState.value
+    var vetName by remember { mutableStateOf("") }
+    var vetId by remember { mutableStateOf("") }
+    val vets = viewModel.vetsViewState.value
 
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
-            title = { Text(stringResource(R.string.select_owner)) },
+            title = { Text(stringResource(R.string.select_vet)) },
             text = {
                 Column {
-                    vets.forEach { owner ->
+                    vets.forEach { vet ->
                         Column(
                             modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    ownerName = owner.name
-                                    ownerId = owner.ownerId
-                                    onDismiss(ownerName, ownerId)
+                                    vetName = vet.name
+                                    vetId = vet.vetId
+                                    onDismiss(vetName, vetId)
                                     showDialog.value = false
                                 }
                                 .padding(all = 8.dp)
                         ) {
                             Text(
-                                text = owner.name,
+                                text = vet.name,
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = owner.email
+                                text = vet.email
                             )
                         }
                     }
 
                     TextField(
-                        value = ownerName,
-                        onValueChange = { ownerName = it },
+                        value = vetName,
+                        onValueChange = { vetName = it },
                         modifier
                             .fillMaxWidth(),
-                        label = { Text(stringResource(R.string.enter_owner)) },
-                        placeholder = { Text(stringResource(R.string.enter_owner)) }
+                        label = { Text(stringResource(R.string.enter_vet)) },
+                        placeholder = { Text(stringResource(R.string.enter_vet)) }
                     )
                 }
             },
             confirmButton = {
                 Button(
                     onClick = {
-                        if (ownerName.isNotEmpty()) {
-                            onDismiss(ownerName, ownerId)
+                        if (vetName.isNotEmpty()) {
+                            onDismiss(vetName, vetId)
                             showDialog.value = false
                         }
                     }
@@ -498,7 +400,7 @@ fun SelectOwner(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClockDialog(
+private fun ClockDialog(
     modifier: Modifier,
     showDialog: MutableState<Boolean>,
     onDismiss: (String) -> Unit
@@ -555,7 +457,7 @@ private fun scheduleNotification(context: Context, visitDate: String, visitTime:
 
     val visitDateTime = "$visitDate $visitTime"
     val calendar = Calendar.getInstance()
-    val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
     try {
         calendar.time = dateFormat.parse(visitDateTime) ?: throw IllegalArgumentException()
@@ -574,7 +476,7 @@ private fun scheduleNotification(context: Context, visitDate: String, visitTime:
     )
 }
 
-fun checkAlarmPermission(context: Context, visitDate: String, visitTime: String) {
+private fun checkAlarmPermission(context: Context, visitDate: String, visitTime: String) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -591,22 +493,4 @@ fun checkAlarmPermission(context: Context, visitDate: String, visitTime: String)
             scheduleNotification(context, visitDate, visitTime)
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SelectPetDateOfBirth(showDialog: MutableState<Boolean>, onDismiss: (String) -> Unit) {
-    val calendarState = rememberUseCaseState()
-    calendarState.show()
-    CalendarDialog(
-        state = calendarState,
-        config = CalendarConfig(
-            monthSelection = true,
-            yearSelection = true
-        ),
-        selection = CalendarSelection.Date { date ->
-            onDismiss(date.toString())
-            showDialog.value = false
-        }
-    )
 }

@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo
+package com.droidcode.apps.petoo.domain.models
 
 data class VaccinationsData(
     var illnessName: String,

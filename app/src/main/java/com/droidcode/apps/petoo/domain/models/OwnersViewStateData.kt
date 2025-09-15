@@ -1,4 +1,4 @@
-package com.droidcode.apps.petoo.vetViews
+package com.droidcode.apps.petoo.domain.models
 
 data class OwnersViewStateData (
     val ownerId: String,

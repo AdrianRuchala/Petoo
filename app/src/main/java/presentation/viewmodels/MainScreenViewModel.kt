@@ -1,11 +1,15 @@
-package com.droidcode.apps.petoo
+package presentation.viewmodels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.droidcode.apps.petoo.domain.models.MainScreenViewStateData
+import com.droidcode.apps.petoo.domain.repository.PetRepository
+import com.droidcode.apps.petoo.domain.models.SortType
+import com.droidcode.apps.petoo.domain.models.VaccinationsData
 import com.droidcode.apps.petoo.ui.theme.VisitData
-import com.droidcode.apps.petoo.vetViews.OwnersViewStateData
-import com.droidcode.apps.petoo.vetViews.VetPetsViewState
-import com.droidcode.apps.petoo.vetViews.VetsViewStateData
+import com.droidcode.apps.petoo.domain.models.OwnersViewStateData
+import com.droidcode.apps.petoo.domain.models.VetPetsViewState
+import com.droidcode.apps.petoo.domain.models.VetsViewStateData
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 

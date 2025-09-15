@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.droidcode.apps.petoo.MainScreenViewModel
+import presentation.viewmodels.MainScreenViewModel
 import com.droidcode.apps.petoo.R
 import com.droidcode.apps.petoo.ui.theme.PetooTheme
 import com.google.firebase.auth.ktx.auth

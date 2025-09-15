@@ -1,9 +1,11 @@
-package com.droidcode.apps.petoo
+package com.droidcode.apps.petoo.domain.repository
 
+import com.droidcode.apps.petoo.domain.models.MainScreenViewStateData
+import com.droidcode.apps.petoo.domain.models.OwnersViewStateData
+import com.droidcode.apps.petoo.domain.models.VaccinationsData
+import com.droidcode.apps.petoo.domain.models.VetPetsViewState
+import com.droidcode.apps.petoo.domain.models.VetsViewStateData
 import com.droidcode.apps.petoo.ui.theme.VisitData
-import com.droidcode.apps.petoo.vetViews.OwnersViewStateData
-import com.droidcode.apps.petoo.vetViews.VetPetsViewState
-import com.droidcode.apps.petoo.vetViews.VetsViewStateData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 
@@ -373,7 +375,8 @@ class PetRepository {
                 database.child(visitId).child("OwnerName").getValue(String::class.java)
                     .toString()
 
-            val visitData = VisitData(visitId, ownerName, ownerId, petId, petName, petImage, vetId,
+            val visitData = VisitData(
+                visitId, ownerName, ownerId, petId, petName, petImage, vetId,
                 vetName, vetAddress, visitDate, visitTime
             )
 
